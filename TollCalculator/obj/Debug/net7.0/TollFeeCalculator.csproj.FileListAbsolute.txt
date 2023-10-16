@@ -1,0 +1,14 @@
+C:\Projects\TollCalculator\TollCalculator\bin\Debug\net7.0\TollFeeCalculator.exe
+C:\Projects\TollCalculator\TollCalculator\bin\Debug\net7.0\TollFeeCalculator.deps.json
+C:\Projects\TollCalculator\TollCalculator\bin\Debug\net7.0\TollFeeCalculator.runtimeconfig.json
+C:\Projects\TollCalculator\TollCalculator\bin\Debug\net7.0\TollFeeCalculator.dll
+C:\Projects\TollCalculator\TollCalculator\bin\Debug\net7.0\TollFeeCalculator.pdb
+C:\Projects\TollCalculator\TollCalculator\obj\Debug\net7.0\TollFeeCalculator.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projects\TollCalculator\TollCalculator\obj\Debug\net7.0\TollFeeCalculator.AssemblyInfoInputs.cache
+C:\Projects\TollCalculator\TollCalculator\obj\Debug\net7.0\TollFeeCalculator.AssemblyInfo.cs
+C:\Projects\TollCalculator\TollCalculator\obj\Debug\net7.0\TollFeeCalculator.csproj.CoreCompileInputs.cache
+C:\Projects\TollCalculator\TollCalculator\obj\Debug\net7.0\TollFeeCalculator.dll
+C:\Projects\TollCalculator\TollCalculator\obj\Debug\net7.0\refint\TollFeeCalculator.dll
+C:\Projects\TollCalculator\TollCalculator\obj\Debug\net7.0\TollFeeCalculator.pdb
+C:\Projects\TollCalculator\TollCalculator\obj\Debug\net7.0\TollFeeCalculator.genruntimeconfig.cache
+C:\Projects\TollCalculator\TollCalculator\obj\Debug\net7.0\ref\TollFeeCalculator.dll
