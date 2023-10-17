@@ -11,6 +11,8 @@
          */
         public decimal GetTotalTollFee(Vehicle vehicle, DateTime[] dates)
         {
+            // Maybe add some sanity check on dates and check if vehicle is null.
+
             DateTime previous = dates.First();
             decimal totalFee = 0m;
             foreach (DateTime current in dates)
@@ -46,11 +48,6 @@
 
         private bool IsTollFreeVehicle(Vehicle vehicle)
         {
-            if (vehicle is null)
-            {
-                return false;
-            }
-
             var vehicleType = vehicle.GetType().Name;
 
             return Enum.IsDefined(typeof(TollFreeVehicles), vehicleType);
