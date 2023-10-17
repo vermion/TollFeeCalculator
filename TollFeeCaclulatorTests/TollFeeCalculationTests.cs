@@ -101,11 +101,43 @@ namespace TollFeeCaclulatorTests
             var tollCalculator = new TollCalculator();
 
             // Act
-            var fee = tollCalculator.GetTotalTollFee(new Car(), new DateTime[] { HelperMethods.GenrateDateWithSpecificWeekday(new DateTime(2020, 01, 03, 07, 05, 00), DayOfWeek.Monday),
-                                                                                 HelperMethods.GenrateDateWithSpecificWeekday(new DateTime(2020, 01, 03, 08, 00, 00), DayOfWeek.Monday),
-                                                                                 HelperMethods.GenrateDateWithSpecificWeekday(new DateTime(2020, 01, 03, 09, 50, 00), DayOfWeek.Monday) });
+            var fee = tollCalculator.GetTotalTollFee(new Car(), new DateTime[] { HelperMethods.GenrateDateWithSpecificWeekday(new DateTime(2020, 01, 03, 07, 05, 00), DayOfWeek.Monday), // 18 kr <- Charged
+                                                                                 HelperMethods.GenrateDateWithSpecificWeekday(new DateTime(2020, 01, 03, 08, 00, 00), DayOfWeek.Monday), // 13 kr <- Not charged
+                                                                                 HelperMethods.GenrateDateWithSpecificWeekday(new DateTime(2020, 01, 03, 09, 50, 00), DayOfWeek.Monday) }); // 8 kr <- Charged
             // Assert
             Assert.Equal(26m, fee);
+        }
+
+        [Fact]
+        public void CheckThatTotalTollFeeIsCalculated_CarPassesThreeTimes_FirstAndSecondPassingOver60Minutes_LastPassingLessThen60MinutesFromPreviousPassing_OnRegularWeekday()
+        {
+            // Arrange
+            var tollCalculator = new TollCalculator();
+
+            // Act
+            var fee = tollCalculator.GetTotalTollFee(new Car(), new DateTime[] { HelperMethods.GenrateDateWithSpecificWeekday(new DateTime(2020, 01, 03, 07, 05, 00), DayOfWeek.Monday), // 18 kr <- Charged
+                                                                                 HelperMethods.GenrateDateWithSpecificWeekday(new DateTime(2020, 01, 03, 08, 06, 00), DayOfWeek.Monday), // 13 kr <- Charged
+                                                                                 HelperMethods.GenrateDateWithSpecificWeekday(new DateTime(2020, 01, 03, 09, 01, 00), DayOfWeek.Monday) }); // 8 kr <- Not charged
+            // Assert
+            Assert.Equal(31m, fee);
+        }
+
+        [Fact]
+        public void CheckThatTotalTollFeeDoesNotExceed60_OnRegularWeekday()
+        {
+            // Arrange
+            var tollCalculator = new TollCalculator();
+
+            // Act
+            var fee = tollCalculator.GetTotalTollFee(new Car(), new DateTime[] { HelperMethods.GenrateDateWithSpecificWeekday(new DateTime(2020, 01, 03, 07, 05, 00), DayOfWeek.Monday),
+                                                                                 HelperMethods.GenrateDateWithSpecificWeekday(new DateTime(2020, 01, 03, 08, 00, 00), DayOfWeek.Monday),
+                                                                                 HelperMethods.GenrateDateWithSpecificWeekday(new DateTime(2020, 01, 03, 09, 50, 00), DayOfWeek.Monday),
+                                                                                 HelperMethods.GenrateDateWithSpecificWeekday(new DateTime(2020, 01, 03, 15, 30, 00), DayOfWeek.Monday),
+                                                                                 HelperMethods.GenrateDateWithSpecificWeekday(new DateTime(2020, 01, 03, 16, 35, 00), DayOfWeek.Monday),
+                                                                                 HelperMethods.GenrateDateWithSpecificWeekday(new DateTime(2020, 01, 03, 17, 45, 00), DayOfWeek.Monday),
+                                                                                 HelperMethods.GenrateDateWithSpecificWeekday(new DateTime(2020, 01, 03, 17, 45, 00), DayOfWeek.Monday)});
+            // Assert
+            Assert.Equal(60m, fee);
         }
     }
 }

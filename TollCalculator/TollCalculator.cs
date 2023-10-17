@@ -25,7 +25,8 @@
                 {                        
                     if (currentFee >= previousFee)
                     {
-                        totalFee = previousFee;
+                        // totalFee = totalFee - previousFee;
+                        totalFee = totalFee + currentFee;
                     }
                 }
                 else
