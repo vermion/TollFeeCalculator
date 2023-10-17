@@ -3,36 +3,44 @@
     public class TollCalculator
     {
         /**
-         * Calculate the total toll fee for one day
+         * Calculate the total toll currentFee for one day
          *
          * @param vehicle - the vehicle
-         * @param dates   - date and time of all passes on one day
-         * @return - the total toll fee for that day
+         * @param dates   - current and time of all passes on one day
+         * @return - the total toll currentFee for that day
          */
         public decimal GetTotalTollFee(Vehicle vehicle, DateTime[] dates)
         {
-            DateTime intervalStart = dates[0];
+            DateTime previous = dates.First();
             decimal totalFee = 0m;
-            foreach (DateTime date in dates)
+            foreach (DateTime current in dates)
             {
-                decimal nextFee = GetTollFee(date, vehicle);
-                decimal tempFee = GetTollFee(intervalStart, vehicle);
+                decimal currentFee = GetTollFee(current, vehicle);
+                decimal previousFee = GetTollFee(previous, vehicle);
 
-                long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-                long minutes = diffInMillies / 1000 / 60;
+                TimeSpan difference = current - previous;
+                int minutesDifference = (int)difference.TotalMinutes; // Not sure about rounding error. Needs some investigation
 
-                if (minutes <= 60)
-                {
-                    if (totalFee > 0) totalFee -= tempFee;
-                    if (nextFee >= tempFee) tempFee = nextFee;
-                    totalFee += tempFee;
+                if (minutesDifference <= 60)
+                {                        
+                    if (currentFee >= previousFee)
+                    {
+                        totalFee = previousFee;
+                    }
                 }
                 else
                 {
-                    totalFee += nextFee;
+                    totalFee += currentFee;
                 }
+
+                if (totalFee > 60m)
+                {
+                    totalFee = 60m;
+                    break;
+                }
+                previous = current;
             }
-            if (totalFee > 60m) totalFee = 60m;
+            
             return totalFee;
         }
 
@@ -48,7 +56,7 @@
             return Enum.IsDefined(typeof(TollFreeVehicles), vehicleType);
         }
 
-        public decimal GetTollFee(DateTime date, Vehicle vehicle)
+        private decimal GetTollFee(DateTime date, Vehicle vehicle)
         {
             if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) 
             { 
