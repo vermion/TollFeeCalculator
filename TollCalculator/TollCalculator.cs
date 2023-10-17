@@ -25,7 +25,6 @@
                 {                        
                     if (currentFee >= previousFee)
                     {
-                        // totalFee = totalFee - previousFee;
                         totalFee = totalFee + currentFee;
                     }
                 }
@@ -111,22 +110,12 @@
                 case 5 when day == 1 || day == 8 || day == 9:
                 case 6 when day == 5 || day == 6 || day == 21:
                 case 7:
-                case 11 when day == 1:
+                case 11 when day == 1: // Not sure about this one.
                 case 12 when day == 24 || day == 25 || day == 26 || day == 31:
                     return true;
                 default:
                     return false;
             }
-        }
-
-        private enum TollFreeVehicles
-        {
-            Motorbike = 0,
-            Tractor = 1,
-            Emergency = 2,
-            Diplomat = 3,
-            Foreign = 4,
-            Military = 5
         }
     }
 }
