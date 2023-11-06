@@ -4,8 +4,29 @@
     {
         private List<TollFee> _tollFees = new List<TollFee>();
 
+        private List<TollFreeDate> _tollFreeDates = new List<TollFreeDate>();
+
         public TollCalculator()
         {
+            // This should be moved to a database or a configuration file. As this is just for a specific year.
+            _tollFreeDates.Add(new TollFreeDate { Month = 1, Date = 1 });
+            _tollFreeDates.Add(new TollFreeDate { Month = 3, Date = 28 });
+            _tollFreeDates.Add(new TollFreeDate { Month = 3, Date = 29 });
+            _tollFreeDates.Add(new TollFreeDate { Month = 4, Date = 1 });
+            _tollFreeDates.Add(new TollFreeDate { Month = 4, Date = 30 });
+            _tollFreeDates.Add(new TollFreeDate { Month = 5, Date = 1 });
+            _tollFreeDates.Add(new TollFreeDate { Month = 5, Date = 8 });
+            _tollFreeDates.Add(new TollFreeDate { Month = 5, Date = 9 });
+            _tollFreeDates.Add(new TollFreeDate { Month = 6, Date = 6 });
+            _tollFreeDates.Add(new TollFreeDate { Month = 6, Date = 21 });
+            _tollFreeDates.Add(new TollFreeDate { Month = 7, Date = 1 });
+            _tollFreeDates.Add(new TollFreeDate { Month = 11, Date = 1 });
+            _tollFreeDates.Add(new TollFreeDate { Month = 12, Date = 24 });
+            _tollFreeDates.Add(new TollFreeDate { Month = 12, Date = 25 });
+            _tollFreeDates.Add(new TollFreeDate { Month = 12, Date = 26 });
+            _tollFreeDates.Add(new TollFreeDate { Month = 12, Date = 31 });
+
+            // This should be moved to a database or a configuration file.
             _tollFees.Add(new TollFee { StartTime = new TimeOnly(06, 00), EndTime = new TimeOnly(06, 29), TollFeeAmoúnt = 8m });
             _tollFees.Add(new TollFee { StartTime = new TimeOnly(06, 30), EndTime = new TimeOnly(06, 59), TollFeeAmoúnt = 13m });
             _tollFees.Add(new TollFee { StartTime = new TimeOnly(07, 00), EndTime = new TimeOnly(07, 59), TollFeeAmoúnt = 18m });
@@ -63,7 +84,7 @@
 
         private bool IsTollFreeVehicle(Vehicle vehicle)
         {
-            var vehicleType = vehicle.GetType().Name; // This property should be moved to the Vehicle class.
+            var vehicleType = vehicle.GetType().Name; // This property could be moved to the Vehicle class for a more OOP approach.
 
             return Enum.IsDefined(typeof(TollFreeVehicles), vehicleType);
         }
@@ -88,17 +109,15 @@
             return 0m;
         }
 
-        // Old code. Kept for reference.
+        // Old code. Kept for reference. This function is replaced by the one above.
         //private decimal GetTollFee(DateTime date, Vehicle vehicle)
         //{
         //    if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) 
         //    { 
         //        return 0; 
         //    }
-
         //    int hour = date.Hour;
         //    int minute = date.Minute;
-
         //    switch (hour)
         //    {
         //        case 6 when minute >= 0 && minute <= 29:
@@ -125,6 +144,32 @@
         //    }
         //}
 
+        //private bool IsTollFreeDate(DateTime date)
+        //{
+        //    int month = date.Month;
+        //    int day = date.Day;
+
+        //    if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
+        //    {
+        //        return true;
+        //    }
+
+        //    switch (month)
+        //    {
+        //        case 1 when day == 1:
+        //        case 3 when day == 28 || day == 29:
+        //        case 4 when day == 1 || day == 30:
+        //        case 5 when day == 1 || day == 8 || day == 9:
+        //        case 6 when day == 6 || day == 21:
+        //        case 7:
+        //        case 11 when day == 1: // Not sure about this one.
+        //        case 12 when day == 24 || day == 25 || day == 26 || day == 31:
+        //            return true;
+        //        default:
+        //            return false;
+        //    }
+        //}
+
         private bool IsTollFreeDate(DateTime date)
         {
             int month = date.Month;
@@ -135,20 +180,15 @@
                 return true;
             }
 
-            switch (month)
+            foreach (var tollFreeDate in _tollFreeDates)
             {
-                case 1 when day == 1:
-                case 3 when day == 28 || day == 29:
-                case 4 when day == 1 || day == 30:
-                case 5 when day == 1 || day == 8 || day == 9:
-                case 6 when day == 5 || day == 6 || day == 21:
-                case 7:
-                case 11 when day == 1: // Not sure about this one.
-                case 12 when day == 24 || day == 25 || day == 26 || day == 31:
+                if (tollFreeDate.Month == month && tollFreeDate.Date == day)
+                {
                     return true;
-                default:
-                    return false;
+                }
             }
+
+            return false;
         }
     }
 }
