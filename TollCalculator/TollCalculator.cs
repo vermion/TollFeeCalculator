@@ -2,6 +2,21 @@
 {
     public class TollCalculator
     {
+        private List<TollFee> _tollFees = new List<TollFee>();
+
+        public TollCalculator()
+        {
+            _tollFees.Add(new TollFee { StartTime = new TimeOnly(06, 00), EndTime = new TimeOnly(06, 29), TollFeeAmoúnt = 8m });
+            _tollFees.Add(new TollFee { StartTime = new TimeOnly(06, 30), EndTime = new TimeOnly(06, 59), TollFeeAmoúnt = 13m });
+            _tollFees.Add(new TollFee { StartTime = new TimeOnly(07, 00), EndTime = new TimeOnly(07, 59), TollFeeAmoúnt = 18m });
+            _tollFees.Add(new TollFee { StartTime = new TimeOnly(08, 00), EndTime = new TimeOnly(08, 29), TollFeeAmoúnt = 13m });
+            _tollFees.Add(new TollFee { StartTime = new TimeOnly(08, 30), EndTime = new TimeOnly(14, 59), TollFeeAmoúnt = 8m });
+            _tollFees.Add(new TollFee { StartTime = new TimeOnly(15, 00), EndTime = new TimeOnly(15, 29), TollFeeAmoúnt = 13m });
+            _tollFees.Add(new TollFee { StartTime = new TimeOnly(15, 30), EndTime = new TimeOnly(16, 59), TollFeeAmoúnt = 18m });
+            _tollFees.Add(new TollFee { StartTime = new TimeOnly(17, 00), EndTime = new TimeOnly(17, 59), TollFeeAmoúnt = 13m });
+            _tollFees.Add(new TollFee { StartTime = new TimeOnly(18, 00), EndTime = new TimeOnly(18, 29), TollFeeAmoúnt = 8m });
+        }
+
         /**
          * Calculate the total toll currentFee for one day
          *
@@ -48,46 +63,67 @@
 
         private bool IsTollFreeVehicle(Vehicle vehicle)
         {
-            var vehicleType = vehicle.GetType().Name;
+            var vehicleType = vehicle.GetType().Name; // This property should be moved to the Vehicle class.
 
             return Enum.IsDefined(typeof(TollFreeVehicles), vehicleType);
         }
 
         private decimal GetTollFee(DateTime date, Vehicle vehicle)
         {
-            if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) 
-            { 
-                return 0; 
-            }
-
-            int hour = date.Hour;
-            int minute = date.Minute;
-
-            switch (hour)
+            if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle))
             {
-                case 6 when minute >= 0 && minute <= 29:
-                    return 8m;
-                case 6 when minute >= 30 && minute <= 59:
-                    return 13m;
-                case 7 when minute >= 0 && minute <= 59:
-                    return 18m;
-                case 8 when minute >= 0 && minute <= 29:
-                    return 13m;
-                case >= 8 and <= 14 when minute >= 30 && minute <= 59:
-                    return 8m;
-                case 15 when minute >= 0 && minute <= 29:
-                    return 13m;
-                case 15 when minute >= 0:
-                case 16 when minute <= 59:
-                    return 18m;
-                case 17 when minute >= 0 && minute <= 59:
-                    return 13m;
-                case 18 when minute >= 0 && minute <= 29:
-                    return 8m;
-                default:
-                    return 0m;
+                return 0m;
             }
+
+            var timeOfEntry = TimeOnly.FromDateTime(date);
+
+            foreach (var tollFee in _tollFees)
+            {
+                if (timeOfEntry >= tollFee.StartTime && timeOfEntry <= tollFee.EndTime)
+                {
+                    return tollFee.TollFeeAmoúnt;
+                }
+            }
+
+            return 0m;
         }
+
+        // Old code. Kept for reference.
+        //private decimal GetTollFee(DateTime date, Vehicle vehicle)
+        //{
+        //    if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) 
+        //    { 
+        //        return 0; 
+        //    }
+
+        //    int hour = date.Hour;
+        //    int minute = date.Minute;
+
+        //    switch (hour)
+        //    {
+        //        case 6 when minute >= 0 && minute <= 29:
+        //            return 8m;
+        //        case 6 when minute >= 30 && minute <= 59:
+        //            return 13m;
+        //        case 7 when minute >= 0 && minute <= 59:
+        //            return 18m;
+        //        case 8 when minute >= 0 && minute <= 29:
+        //            return 13m;
+        //        case >= 8 and <= 14 when minute >= 30 && minute <= 59:
+        //            return 8m;
+        //        case 15 when minute >= 0 && minute <= 29:
+        //            return 13m;
+        //        case 15 when minute >= 0:
+        //        case 16 when minute <= 59:
+        //            return 18m;
+        //        case 17 when minute >= 0 && minute <= 59:
+        //            return 13m;
+        //        case 18 when minute >= 0 && minute <= 29:
+        //            return 8m;
+        //        default:
+        //            return 0m;
+        //    }
+        //}
 
         private bool IsTollFreeDate(DateTime date)
         {
