@@ -84,9 +84,9 @@
 
         private bool IsTollFreeVehicle(Vehicle vehicle)
         {
-            var vehicleType = vehicle.GetType().Name; // This property could be moved to the Vehicle class for a more OOP approach.
+            var vehicleType = vehicle.GetType().Name; 
 
-            return Enum.IsDefined(typeof(TollFreeVehicles), vehicleType);
+            return Enum.IsDefined(typeof(TollFreeVehicles), vehicleType); // This property could be moved to the Vehicle class for a more OOP approach.
         }
 
         private decimal GetTollFee(DateTime date, Vehicle vehicle)
