@@ -144,6 +144,7 @@
         //    }
         //}
 
+        // Old code. Kept for reference. This function is replaced by the one belove.
         //private bool IsTollFreeDate(DateTime date)
         //{
         //    int month = date.Month;
